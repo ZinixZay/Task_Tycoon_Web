@@ -31,4 +31,4 @@ class LoginUser(LoginView):
         return {'title': 'Вход', **context}
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('success')
