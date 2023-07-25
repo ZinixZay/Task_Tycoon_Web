@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+{% block mainmenu %}<ul class="menu">
+  {% for el in menu %}
+    <li><a href="{% url el.url_name %}">{{ el.title }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock mainmenu %}
+{% block content %}
+{% endblock content %}
+</body>
+</html>
