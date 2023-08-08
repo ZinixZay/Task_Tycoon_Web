@@ -1,0 +1,244 @@
+body {
+    background-color: #38444c;
+    color: mintcream;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif
+}
+
+input {
+    outline: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: mintcream 2px solid;
+    font-family: 'Montserrat', sans-serif
+}
+
+input:focus {
+    outline: none;
+    border: #38444c 2px solid;
+}
+
+p{
+    font-family: 'Montserrat', sans-serif
+}
+
+hr {
+    color: moccasin;
+    background-color: moccasin;
+    height: 2px;
+    border: none;
+    outline: none;
+    margin: 20px 0 25px 0;
+}
+
+textarea {
+    width: 520px;
+    height: 100px;
+    outline: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: mintcream 2px solid;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif
+}
+
+textarea:focus {
+    outline: none;
+    border: #38444c 2px solid;
+}
+
+
+/*-------------------------------------------------------------------------------------*/
+.wrapper {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    font-family: 'Montserrat', sans-serif
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------*/
+.top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.title {
+    font-size: 40px;
+    background-color: transparent;
+    border: transparent;
+    text-align: center;
+    color: #fffbe0;
+}
+
+.title:focus {
+    border: none;
+}
+
+.submit_btn {
+    background-color: #5fbb35;
+    border-radius: 5px;
+    font-size: 30px;
+    padding: 5px;
+    transition: background-color .4s;
+}
+
+.submit_btn:hover{
+    background-color: #53a42c;
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+.all-tasks {
+    width: 100%;
+}
+
+.all-tasks .task_response {
+    margin-bottom: 20px;
+}
+
+.all-tasks .task_name {
+    margin-bottom: 15px;
+}
+
+.all-tasks .task_response_name {
+    margin-bottom: 5px;
+}
+
+.all-tasks input[type="checkbox"] {
+    transform: scale(1.9);
+}
+
+/*-------------------------------------------------------------------------------------*/
+.task {
+
+}
+
+.task_add {
+    margin-bottom: 30px;
+}
+
+.task_add button {
+    background-color: moccasin;
+    padding: 10px;
+    font-size: 17.95px;
+    border-radius: 10px;
+    transition: background-color .4s;
+}
+
+.task_task_del {
+    width: 20%;
+    border-radius: 5px;
+    justify-content: end;
+    font-size: 16px;
+    margin-left: 30px;
+    padding: 6.5px 0;
+    transform: translateY(-2px);
+}
+
+.task_add button:hover {
+    background-color: #ccb685;
+}
+
+.task_content {
+    padding: 15px 30px;
+    box-shadow: inset 5px 0 0 0 moccasin;
+    background: linear-gradient(90deg, rgba(255, 228, 181, 0.5) 0%, rgba(56, 68, 76, 1) 100%);
+}
+
+.task_info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.task_name {
+    width: 60%;
+    margin-right: 15px;
+    background-color: mintcream;
+    font-size: 18px;
+}
+
+.task_response_add {
+    width: 20%;
+    border-radius: 5px;
+    justify-content: end;
+    font-size: 20px;
+}
+
+.task_ready {
+    background-color: moccasin;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 5px;
+}
+
+
+.task_responses {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.task_response {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task_response_name {
+    font-size: 16px;
+    margin-right: 15px;
+    width: 50%;
+}
+
+.task_response_del {
+    margin-left: 15px;
+    border-radius: 5px;
+    font-size: 18px !important;
+    padding: 1px 15px;
+    background-color: #e7591f;
+    height: 23px;
+    transition: background-color 0.4s;
+}
+
+.task_response_del:hover {
+    background-color: #c44a1a;
+}
+
+.task_response input[type="checkbox"] {
+    transform: scale(1.9);
+}
+
+.task_response button {
+    font-size: 16px;
+}
+
+.task_detailed input {
+    width: 60%;
+}
+
+
+.task_test_off {
+    display: none;
+}
+
+.task_detailed_off {
+    display: none;
+}
+
+.create_but {
+    text-decoration: none;
+    color: black;
+}
+/*-------------------------------------------------------------------------------------*/

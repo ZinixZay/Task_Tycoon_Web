@@ -1,11 +1,12 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="styles.css">
+    <link type="text/css" href="{% static 'tasks/css/styles.css' %}" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
     <title>Document</title>
@@ -13,7 +14,13 @@
 <body>
 <div class="wrapper">
     <header>
-        <h1>Создание заданий</h1>
+        <form class="top">
+            {% csrf_token %}
+            <input class="title" placeholder="Заголовок..." name="title">
+            <button class="submit_btn" form="form-all-tasks" id="submit-btn">
+                <a class="create_but" href="http://127.0.0.1:8000/">Создать</a>
+            </button>
+        </form>
     </header>
     <div class="task">
         <div class="task_add">
@@ -22,6 +29,7 @@
         </div>
         <div class="task_block">
             <form class="task_content task_test task_test_off">
+                {% csrf_token %}
                 <div class="task_info">
                     <input class="task_name" type="text" placeholder="Название" name="name">
                     <button class="task_response_add">+</button>
@@ -30,21 +38,29 @@
                     <div class="task_response">
                         <input class="task_response_name" type="text" placeholder="Ответ" name="response">
                         <input type="checkbox">
+                        <button class="task_response_del">-</button>
                     </div>
                 </div>
-                <button class="submit_btn">Готово</button>
+                <button class="task_ready">Готово</button>
             </form>
             <form class="task_content task_detailed task_detailed_off">
+                {% csrf_token %}
                 <div class="task_info">
                     <input class="task_name" type="text" placeholder="Название" name="name">
                 </div>
-                <button class="submit_btn">Готово</button>
+                <button class="task_ready">Готово</button>
             </form>
         </div>
+        <hr>
+        <h3>Результат</h3>
     </div>
+    <form class="form_all-tasks" id="form-all-tasks">
+        {% csrf_token %}
+        <div class="all-tasks"></div>
+    </form>
 </div>
 
-<script src="script.js"></script>
-<script src="postTask.js"></script>
+<script src="{% static 'tasks/js/script.js' %}"></script>
+<script src="{% static 'tasks/js/postTask.js' %}"></script>
 </body>
 </html>
