@@ -1,10 +1,23 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
 </head>
 <body>
+<ul class="menu">
+    {% for el in menu %}
+        <li class="header"><a href="{% url el.ulr_name %}">{{ el.title }}</a></li>
+    {% endfor %}
+    {% if request.user.is_authenticated %}
+        <li class="last header">{{ user.username }} | <a href="{% url 'logout' %}">Выйти</a></li>
+    {% else %}
+        <li class="last header">
+            <a href="{% url 'registration' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
+        </li>
+    {% endif %}
+</ul>
 {% block content %}
 {% endblock %}
 </body>
