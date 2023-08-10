@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link type="text/css" href="{% static 'tasks/css/styles.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'tasks/css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
     <title>Document</title>
@@ -14,12 +14,9 @@
 <body>
 <div class="wrapper">
     <header>
-        <form class="top">
-            {% csrf_token %}
+        <form class="top" action="">
             <input class="title" placeholder="Заголовок..." name="title">
-            <button class="submit_btn" form="form-all-tasks" id="submit-btn">
-                <a class="create_but" href="http://127.0.0.1:8000/">Создать</a>
-            </button>
+            <button class="submit_btn" form="form-all-tasks" id="submit-btn">Создать</button>
         </form>
     </header>
     <div class="task">
@@ -29,7 +26,6 @@
         </div>
         <div class="task_block">
             <form class="task_content task_test task_test_off">
-                {% csrf_token %}
                 <div class="task_info">
                     <input class="task_name" type="text" placeholder="Название" name="name">
                     <button class="task_response_add">+</button>
@@ -44,7 +40,6 @@
                 <button class="task_ready">Готово</button>
             </form>
             <form class="task_content task_detailed task_detailed_off">
-                {% csrf_token %}
                 <div class="task_info">
                     <input class="task_name" type="text" placeholder="Название" name="name">
                 </div>
@@ -54,8 +49,7 @@
         <hr>
         <h3>Результат</h3>
     </div>
-    <form class="form_all-tasks" id="form-all-tasks">
-        {% csrf_token %}
+    <form class="form_all-tasks" id="form-all-tasks" action="">
         <div class="all-tasks"></div>
     </form>
 </div>

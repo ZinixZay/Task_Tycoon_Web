@@ -122,9 +122,6 @@ submitButtons.forEach((button) => {
       });
     } else {
       newResponseDiv.classList.add('task_detailed');
-      const newTextarea = document.createElement('textarea');
-
-      newResponseDiv.appendChild(newTextarea);
 
       allTasksDiv.appendChild(newResponseDiv);
 
