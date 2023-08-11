@@ -1,16 +1,12 @@
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .forms import NewUserForm
+from .forms import NewUserForm, NewUserLoginForm
 
 # Create your views here.
-
-
-def index(request):
-    return render(request, template_name='authentication/index.html')
 
 
 def logout_user(request):
@@ -29,7 +25,7 @@ class CreateUser(CreateView):
 
 
 class LoginUser(LoginView):
-    form_class = AuthenticationForm
+    form_class = NewUserLoginForm
     template_name = 'authentication/login.html'
 
     def get_context_data(self, **kwargs):

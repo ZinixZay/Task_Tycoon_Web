@@ -1,11 +1,14 @@
 {% extends 'tasks/base.html' %}
 {% block content %}
-<ul>
-    {% for task in tasks %}
-    <li>
-        <a>{{task.title}}</a>
-    </li>
-    {% endfor %}
-</ul>
-
+    <div class="wrapper tasks_plane">
+        {% for task in tasks %}
+        <div class="task_content task_plane">
+            <p>{{task.title}}</p>
+            <div class="task_view_btns">
+                <button class="task_ready">Просмотр</button>
+                <button class="task_ready">Ответы</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 body {
-    background-color: #38444c;
+    background-color: #242f3d;
     color: mintcream;
     font-family: 'Montserrat', sans-serif !important;
 }
@@ -7,7 +7,7 @@ body {
 button {
     border: none;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif
+    font-family: 'Montserrat', sans-serif;
 }
 
 input {
@@ -23,17 +23,47 @@ input:focus {
     border: #38444c 2px solid;
 }
 
+.menu-el {
+    color: #edeeef;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.main-menu{
+    display: flex;
+    gap: 160px;
+    width: 50%;
+}
+
+.menu {
+    margin-bottom: 50px;
+    position: sticky;
+    display: flex;
+    height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    background-color: #17212BFF;
+    width: 100%;
+}
+
 p{
     font-family: 'Montserrat', sans-serif
 }
 
 hr {
-    color: moccasin;
-    background-color: moccasin;
+    color: #FA6C6C;
+    background-color: #FA6C6C;
     height: 2px;
     border: none;
     outline: none;
     margin: 20px 0 25px 0;
+}
+
+.last {
+    font-weight: 700;
+    color: #FA6C6C;
 }
 
 textarea {
@@ -55,11 +85,16 @@ textarea:focus {
 
 /*-------------------------------------------------------------------------------------*/
 .wrapper {
-    width: 600px;
+    border-radius:10px;
+    background-color: #17212BFF;
+    padding: 35px;
+    width: 670px;
     display: flex;
     flex-direction: column;
     margin: 20px auto;
-    font-family: 'Montserrat', sans-serif
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    min-height: 100vh;
 }
 
 /*-------------------------------------------------------------------------------------*/
@@ -68,12 +103,13 @@ textarea:focus {
 /*-------------------------------------------------------------------------------------*/
 .top {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 60px;
 }
 
 .title {
+    width: 75%;
     font-size: 40px;
     background-color: transparent;
     border: transparent;
@@ -86,11 +122,12 @@ textarea:focus {
 }
 
 .submit_btn {
-    background-color: #5fbb35;
+    background-color: #53a42c;
     border-radius: 5px;
     font-size: 30px;
     padding: 5px;
     transition: background-color .4s;
+    color: black;
 }
 
 .submit_btn:hover{
@@ -124,11 +161,20 @@ textarea:focus {
 
 }
 
+.task_content p{
+    margin-bottom: 15px;
+}
+
+.task h3{
+    margin-bottom: 30px;
+}
+
 .task_add {
     margin-bottom: 30px;
 }
 
 .task_add button {
+    color: black;
     background-color: moccasin;
     padding: 10px;
     font-size: 17.95px;
@@ -137,6 +183,8 @@ textarea:focus {
 }
 
 .task_task_del {
+    background-color: white;
+    color: black;
     width: 20%;
     border-radius: 5px;
     justify-content: end;
@@ -151,9 +199,10 @@ textarea:focus {
 }
 
 .task_content {
+    margin-bottom: 30px;
     padding: 15px 30px;
-    box-shadow: inset 5px 0 0 0 moccasin;
-    background: linear-gradient(90deg, rgba(255, 228, 181, 0.5) 0%, rgba(56, 68, 76, 1) 100%);
+    box-shadow: inset 5px 0 0 0 #FA6C6C;
+    background-color: #17212BFF;
 }
 
 .task_info {
@@ -163,6 +212,7 @@ textarea:focus {
 }
 
 .task_name {
+    color: black;
     width: 60%;
     margin-right: 15px;
     background-color: mintcream;
@@ -170,6 +220,8 @@ textarea:focus {
 }
 
 .task_response_add {
+    color: black;
+    background-color: white;
     width: 20%;
     border-radius: 5px;
     justify-content: end;
@@ -177,6 +229,7 @@ textarea:focus {
 }
 
 .task_ready {
+    color: black;
     background-color: moccasin;
     border-radius: 5px;
     font-size: 18px;
@@ -200,6 +253,8 @@ textarea:focus {
     font-size: 16px;
     margin-right: 15px;
     width: 50%;
+    color: black;
+    background-color: white
 }
 
 .task_response_del {
@@ -241,4 +296,47 @@ textarea:focus {
     text-decoration: none;
     color: black;
 }
+
 /*-------------------------------------------------------------------------------------*/
+
+.login_form {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    font-family: 'Montserrat', sans-serif
+}
+
+.login_form p {
+    gap: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login_form input {
+    background: mintcream;
+    color: black;
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+.tasks_plane {
+    gap: 50px;
+}
+
+.task_plane {
+}
+
+.task_plane p{
+    color: #FA6C6C;
+    font-size: 28px;
+    font-weight: 500;
+    width:
+}
+
+.task_view_btns {
+    display: flex;
+    gap: 30px;
+}

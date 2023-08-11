@@ -1,9 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, DetailView
 
 from .models import Task
-
-# Create your views here.
 
 
 menu = [
@@ -11,6 +9,12 @@ menu = [
     {'title': 'Мои задания', 'url_name': 'tasks'},
     {'title': 'Создать задание', 'url_name': 'createtask'}
 ]
+
+# Create your views here.
+
+
+def index(request):
+    return render(request, template_name='tasks/index.html', context={'menu': menu, 'title': 'Главная'})
 
 
 class CreateTask(View):
@@ -31,3 +35,8 @@ class MyTasks(ListView):
     def get_queryset(self):
         new_queryset = Task.objects.filter(creator_id=self.request.user.id)
         return new_queryset
+
+
+class ShowTask(DetailView):
+    template_name = 'tasks/show_task.html'
+

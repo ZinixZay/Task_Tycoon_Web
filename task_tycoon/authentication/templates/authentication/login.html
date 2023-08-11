@@ -1,9 +1,9 @@
 {% extends 'authentication/base.html' %}
 
 {% block content %}
-    <form method="post">
+    <form class="login_form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Войти</button>
+        <button class="submit_btn" type="submit">Войти</button>
     </form>
 {% endblock %}
