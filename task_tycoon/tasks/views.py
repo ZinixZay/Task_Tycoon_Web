@@ -4,6 +4,11 @@ from django.views.generic import View, ListView, DetailView
 from .models import Task
 
 
+'''
+Сделать пермишны для неавторизованных
+Добавить .env
+'''
+
 menu = [
     {'title': 'Главная', 'url_name': 'home'},
     {'title': 'Мои задания', 'url_name': 'tasks'},
@@ -38,5 +43,11 @@ class MyTasks(ListView):
 
 
 class ShowTask(DetailView):
+    model = Task
     template_name = 'tasks/show_task.html'
+    context_object_name = 'task'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = {'title': kwargs['object'].title, 'menu': menu}
+        return {**context, **c_def}

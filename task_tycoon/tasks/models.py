@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 from .utils import generate_identifier
 
 # Create your models here.
@@ -13,6 +15,9 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('task', kwargs={'pk': self.pk})
 
 
 class Question(models.Model):

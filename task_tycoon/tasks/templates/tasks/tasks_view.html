@@ -5,7 +5,7 @@
         <div class="task_content task_plane">
             <p>{{task.title}}</p>
             <div class="task_view_btns">
-                <button class="task_ready">Просмотр</button>
+                <button class="task_ready"><a class="create_but" href="{% url 'task' task.id %}">Просмотр</a></button>
                 <button class="task_ready">Ответы</button>
             </div>
         </div>
