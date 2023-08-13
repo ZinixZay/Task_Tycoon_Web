@@ -2,6 +2,22 @@
 
 {% block content %}
 
-
+<div class="wrapper tasks_plane">
+        {% for question in questions %}
+        <div class="task_content task_plane">
+            <p> {{ question.title }} </p>
+            {% if question.variants %}
+                {% for variant in question.variants %}
+                    {% if variant.response_right %}
+                        <p class="right_response"> {{ variant.response_name }}</p>
+                    {% else %}
+                        <p class="falset_response"> {{ variant.response_name }}</p>
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

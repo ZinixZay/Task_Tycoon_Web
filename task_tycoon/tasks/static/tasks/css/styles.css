@@ -336,6 +336,13 @@ textarea:focus {
     width:
 }
 
+.task_plane .right_response{
+    color: #5DE100;
+    font-size: 28px;
+    font-weight: 500;
+    width:
+}
+
 .task_view_btns {
     display: flex;
     gap: 30px;
