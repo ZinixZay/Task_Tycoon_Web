@@ -3,11 +3,11 @@
     <div class="wrapper tasks_plane">
         {% for task in tasks %}
         <div class="task_content task_plane">
-            <p>{{task.title}}</p>
+            <p>{{task.title}}<span>id: {{task.identifier}}</span></p>
             <div class="task_view_btns">
                 <button class="task_ready"><a class="create_but" href="{% url 'task' task.id %}">Просмотр</a></button>
                 <button class="task_ready">Ответы</button>
-                <button class="task_ready"><a class="create_but" href="{% url 'task' task.id %}">Удалить</a></button>
+                <button class="task_ready"><a class="create_but" href="{% url 'delete' task.id %}">Удалить</a></button>
             </div>
         </div>
         {% endfor %}

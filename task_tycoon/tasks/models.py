@@ -21,7 +21,17 @@ class Task(models.Model):
 
 
 class Question(models.Model):
-    title = models.CharField(verbose_name='Название', max_length=50)
+    title = models.CharField(verbose_name='Название', max_length=255)
     test_type = models.BooleanField(verbose_name='Тестовый')
     variants = models.JSONField(verbose_name='Варианты', default=None, null=True)
     task = models.ForeignKey('Task', verbose_name='Задание', on_delete=models.CASCADE)
+
+
+class Answer(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, verbose_name='Задание', on_delete=models.CASCADE)
+    content = models.JSONField(verbose_name='Ответ', default=None, null=True)
+
+    def __str__(self):
+        return self.user.username, self.task.title, self.content
+

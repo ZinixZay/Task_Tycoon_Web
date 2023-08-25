@@ -1,0 +1,29 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+
+<div class="wrapper tasks_plane">
+<form action="{% url 'solve' %}" method="post">
+    {% csrf_token %}
+    <div class="task_content task_plane">
+        <input type="hidden" name="task_title" value="{{ task.title }}">
+        <p>{{ task.title }}</p>
+        {% for question in questions %}
+            <p class="question"> {{ question.title }} </p>
+            {% if question.variants %}
+                {% for variant in question.variants %}
+                    <div class="test_variants">
+                        <label class="variant">{{ variant.response_name }}</label>
+                        <input class="solve_checkbox" type="checkbox" name="{{ question.title }}" value="{{ variant.response_name }}">
+                    </div>
+                {% endfor %}
+            {% else %}
+                <textarea class="answer_field" name="{{ question.title }}"></textarea>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <button class="solve_btn">Отправить решение</button>
+</form>
+</div>
+
+{% endblock %}

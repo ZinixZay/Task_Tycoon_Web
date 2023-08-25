@@ -2,10 +2,13 @@
 
 {% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit"></button>
-</form>
+<div class="wrapper">
+    <form class="delete_form" method="post">
+        {% csrf_token %}
+        <p>Вы точно хотите удалить "{{ task }}"?</p>
+        <input type="submit" value="Да">
+    </form>
+</div>
+
 
 {% endblock %}

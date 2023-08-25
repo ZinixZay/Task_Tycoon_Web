@@ -56,7 +56,7 @@ document.getElementById("submit-btn").addEventListener("click", function (e) {
       document.querySelector('.title').value = ''
       document.querySelector('.all-tasks').innerHTML = ''
 
-      window.location.href = 'http://127.0.0.1:8000/'
+      window.location.href = 'http://127.0.0.1:8000/tasks/'
 
       return response.json();
     })

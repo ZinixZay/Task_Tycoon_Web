@@ -1,0 +1,16 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+
+<div class="wrapper">
+  <div class="search">
+     <form action="{% url 'search' %}" method="post">
+         {% csrf_token %}
+         {{ form.as_p }}
+        <button type="submit" class="task_ready">Найти</button>
+     </form>
+  </div>
+</div>
+
+{% endblock %}
+
