@@ -30,3 +30,22 @@ def check_solution_exists(Answer, task, user) -> bool:
     if solution:
         return True
     return False
+
+
+def analyse_answer(question_query, user_answers) -> dict:
+    # question_query parse
+
+    right_answers = {}
+    for question in question_query:
+        if question.variants:
+            right_answers[question.title] = [i['response_name'] for i in list(
+                filter(lambda x: x['response_right'], question.variants))]
+
+    result = {}
+    for question, answer in user_answers.content.items():
+        if question in right_answers.keys():
+            if answer != right_answers[question]:
+                result['question'] = False
+            else:
+                result['question'] = True
+    return {}

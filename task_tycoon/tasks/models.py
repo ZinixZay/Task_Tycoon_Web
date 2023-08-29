@@ -33,5 +33,5 @@ class Answer(models.Model):
     content = models.JSONField(verbose_name='Ответ', default=None, null=True)
 
     def __str__(self):
-        return self.user.username, self.task.title, self.content
+        return f'{self.user.username}, {self.task.title}, {self.content}'
 

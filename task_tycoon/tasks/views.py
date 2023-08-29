@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
-from .utils import parse_answer_to_dict, check_solution_exists
+from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer
 
 
 '''
@@ -39,6 +39,9 @@ class SolutionShow(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = {'title': f'Ответы на "{kwargs["object"].task}"', 'menu': menu}
+        question_query = Question.objects.filter(task=kwargs["object"].task)
+        user_solution = Answer.objects.get(task=kwargs["object"].task, user=self.request.user)
+        answer_result = analyse_answer(question_query, user_solution)
         return {**context, **c_def}
 
 
