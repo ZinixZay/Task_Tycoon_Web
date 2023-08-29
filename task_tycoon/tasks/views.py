@@ -5,21 +5,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
-from .utils import parse_answer_to_dict
+from .utils import parse_answer_to_dict, check_solution_exists
 
 
 '''
-Сделать пермишны для неавторизованных
+Админка
+Сделать пермишны для неавторизованных (и чужих страниц)
 Добавить .env
 Валидаторы на задание
 Миксины
+Задай вопрос, почему не могу импортировать модель в utils
 '''
 
 menu = [
     {'title': 'Главная', 'url_name': 'home'},
     {'title': 'Мои задания', 'url_name': 'tasks'},
     {'title': 'Создать задание', 'url_name': 'createtask'},
-    {'title': 'Решить задание', 'url_name': 'search'},
+    {'title': 'Решить задание', 'url_name': 'search'}
 ]
 
 # Create your views here.
@@ -27,6 +29,33 @@ menu = [
 
 def index(request):
     return render(request, template_name='tasks/index.html', context={'menu': menu, 'title': 'Главная'})
+
+
+class SolutionShow(LoginRequiredMixin, DetailView):
+    model = Answer
+    template_name = 'tasks/show_solution.html'
+    context_object_name = 'answer'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = {'title': f'Ответы на "{kwargs["object"].task}"', 'menu': menu}
+        return {**context, **c_def}
+
+
+class SolutionTaskShow(LoginRequiredMixin, ListView):
+    model = Answer
+    template_name = 'tasks/show_solutions.html'
+    context_object_name = 'answers'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        task_title = Task.objects.get(pk=self.kwargs['pk']).title
+        c_def = {'title': f'Ответы на "{task_title}"', 'menu': menu}
+        return {**context, **c_def}
+
+    def get_queryset(self):
+        queryset = Answer.objects.filter(task=self.kwargs['pk'])
+        return queryset
 
 
 class AnswerTask(LoginRequiredMixin, DetailView):
@@ -75,6 +104,8 @@ class SolveTask(LoginRequiredMixin, TemplateView):
     def post(self, *args):
         answer = parse_answer_to_dict(self.request.POST)
         task = Task.objects.get(title=answer.pop('task_title'))
+        if check_solution_exists(Answer, task, self.request.user):
+            return redirect('home')
         Answer.objects.create(user=self.request.user, task=task, content=answer)
         return redirect('home')
 

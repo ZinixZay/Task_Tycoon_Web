@@ -33,7 +33,7 @@ input:focus {
 .main-menu{
     display: flex;
     gap: 70px;
-    width: 50%;
+    width: 80%;
 }
 
 .menu {

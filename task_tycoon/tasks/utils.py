@@ -1,6 +1,7 @@
 from random import randint
 import json
 
+
 # Functions
 
 
@@ -22,3 +23,10 @@ def parse_answer_to_dict(response) -> dict:
             continue
         content[header] = dict_response[header]
     return {'task_title': task_title[0], **content}
+
+
+def check_solution_exists(Answer, task, user) -> bool:
+    solution = Answer.objects.filter(task=task, user=user)
+    if solution:
+        return True
+    return False
