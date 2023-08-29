@@ -5,47 +5,45 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
-from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer
+from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
+    DataMixin, AuthorRequiredMixin, TaskAuthorRequiredMixin
+
 
 
 '''
 Админка
-Сделать пермишны для неавторизованных (и чужих страниц)
 Добавить .env
 Валидаторы на задание
-Миксины
 Задай вопрос, почему не могу импортировать модель в utils
 '''
 
-menu = [
-    {'title': 'Главная', 'url_name': 'home'},
-    {'title': 'Мои задания', 'url_name': 'tasks'},
-    {'title': 'Создать задание', 'url_name': 'createtask'},
-    {'title': 'Решить задание', 'url_name': 'search'}
-]
 
 # Create your views here.
 
 
-def index(request):
-    return render(request, template_name='tasks/index.html', context={'menu': menu, 'title': 'Главная'})
+class Index(DataMixin, View):
+    def get(self, request):
+        if self.request.user.is_authenticated:
+            return render(self.request, template_name='tasks/index.html', context=self.set_context(title='Главная'))
+        else:
+            return redirect('registration')
 
 
-class SolutionShow(LoginRequiredMixin, DetailView):
+class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
     model = Answer
     template_name = 'tasks/show_solution.html'
     context_object_name = 'answer'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = {'title': f'Ответы на "{kwargs["object"].task}"', 'menu': menu}
+        c_def = self.set_context(title=f'Ответы на "{kwargs["object"].task}"')
         question_query = Question.objects.filter(task=kwargs["object"].task)
         user_solution = Answer.objects.get(task=kwargs["object"].task, user=self.request.user)
         answer_result = analyse_answer(question_query, user_solution)
-        return {**context, **c_def}
+        return {**context, **c_def, 'result': answer_result}
 
 
-class SolutionTaskShow(LoginRequiredMixin, ListView):
+class SolutionTaskShow(DataMixin, LoginRequiredMixin, ListView):
     model = Answer
     template_name = 'tasks/show_solutions.html'
     context_object_name = 'answers'
@@ -53,7 +51,7 @@ class SolutionTaskShow(LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         task_title = Task.objects.get(pk=self.kwargs['pk']).title
-        c_def = {'title': f'Ответы на "{task_title}"', 'menu': menu}
+        c_def = self.set_context(title=f'Ответы на "{task_title}"')
         return {**context, **c_def}
 
     def get_queryset(self):
@@ -61,7 +59,8 @@ class SolutionTaskShow(LoginRequiredMixin, ListView):
         return queryset
 
 
-class AnswerTask(LoginRequiredMixin, DetailView):
+class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):
+    login_url = 'answer'
     model = Task
     template_name = 'tasks/task_answer.html'
     context_object_name = 'task'
@@ -71,16 +70,16 @@ class AnswerTask(LoginRequiredMixin, DetailView):
 
         questions = Question.objects.filter(task_id=self.kwargs['pk'])
 
-        c_def = {'title': kwargs['object'].title, 'menu': menu, 'questions': questions}
+        c_def = self.set_context(title=kwargs['object'].title, questions=questions)
         return {**context, **c_def}
 
 
-class SearchTask(LoginRequiredMixin, TemplateView):
+class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
     template_name = 'tasks/task_search.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = {'title': 'Поиск', 'menu': menu, 'form': SearchTaskForm(self.request.GET)}
+        c_def = self.set_context(title='Поиск', form=SearchTaskForm(self.request.GET))
         return {**context, **c_def}
 
     def post(self, *args):
@@ -94,14 +93,14 @@ class SearchTask(LoginRequiredMixin, TemplateView):
                 return redirect('search')
 
 
-class SolveTask(LoginRequiredMixin, TemplateView):
+class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
     template_name = 'tasks/solve_task.html'
 
     def get_context_data(self, **kwargs):
         task = Task.objects.filter(identifier=kwargs['identifier'])[0]
         questions = Question.objects.filter(task_id=task.id)
         context = super().get_context_data(**kwargs)
-        c_def = {'title': f'Решение {task.title}', 'menu': menu, 'questions': questions, 'task': task}
+        c_def = self.set_context(title=f'Решение {task.title}', questions=questions, task=task)
         return {**context, **c_def}
 
     def post(self, *args):
@@ -113,31 +112,29 @@ class SolveTask(LoginRequiredMixin, TemplateView):
         return redirect('home')
 
 
-class CreateTask(LoginRequiredMixin, View):
+class CreateTask(DataMixin, LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'tasks/create_task.html', context={'title': 'Создание задания', 'menu': menu})
+        return render(request, 'tasks/create_task.html', context=self.set_context(title='Создание задания'))
 
 
-class MySolves(LoginRequiredMixin, ListView):
-    pass
-
-
-class MyTasks(LoginRequiredMixin, ListView):
+class MyTasks(DataMixin, LoginRequiredMixin, ListView):
     model = Task
     template_name = "tasks/tasks_view.html"
     context_object_name = 'tasks'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = {'title': 'Задания', 'menu': menu}
+        c_def = self.set_context(title='Задания')
         return {**context, **c_def}
 
     def get_queryset(self):
-        new_queryset = reversed(Task.objects.filter(creator_id=self.request.user.id))
-        return new_queryset
+        new_queryset = Task.objects.filter(creator_id=self.request.user.id)
+        if new_queryset:
+            return reversed(new_queryset)
+        return []
 
 
-class ShowTask(LoginRequiredMixin, DetailView):
+class ShowTask(DataMixin, AuthorRequiredMixin, DetailView):
     model = Task
     template_name = 'tasks/show_task.html'
     context_object_name = 'task'
@@ -147,11 +144,11 @@ class ShowTask(LoginRequiredMixin, DetailView):
 
         questions = Question.objects.filter(task_id=self.kwargs['pk'])
 
-        c_def = {'title': kwargs['object'].title, 'menu': menu, 'questions': questions}
+        c_def = self.set_context(title=kwargs['object'].title, questions=questions)
         return {**context, **c_def}
 
 
-class DeleteTask(LoginRequiredMixin, DeleteView):
+class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
     model = Task
     template_name = 'tasks/delete_task.html'
     success_url = reverse_lazy('tasks')
@@ -159,6 +156,5 @@ class DeleteTask(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = {'title': 'Удаление задания', 'menu': menu}
+        c_def = self.set_context(title='Удаление задания')
         return {**context, **c_def}
-

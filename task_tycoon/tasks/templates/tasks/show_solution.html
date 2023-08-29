@@ -3,7 +3,18 @@
 {% block content %}
 
 <div class="wrapper task_plane">
-
+    {% for question, answer in result.items %}
+        <div class="task_content task_plane">
+            <p class="tasky_name">{{ question }}</p>
+            {% if answer == True %}
+                <p class="submit_btn">Верно</p>
+            {% elif answer == False %}
+                <p class="false_answer">Неверно</p>
+            {% else %}
+                <p>{{ answer }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

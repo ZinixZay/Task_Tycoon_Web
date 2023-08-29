@@ -1,5 +1,47 @@
 from random import randint
 import json
+from django.contrib.auth.mixins import AccessMixin
+from django.shortcuts import redirect
+
+# Variables
+
+menu = [
+    {'title': 'Главная', 'url_name': 'home'},
+    {'title': 'Мои задания', 'url_name': 'tasks'},
+    {'title': 'Создать задание', 'url_name': 'createtask'},
+    {'title': 'Решить задание', 'url_name': 'search'}
+]
+
+
+# Mixins
+
+
+class DataMixin:
+
+    def set_context(self, **kwargs):
+        context = kwargs
+        context['menu'] = menu
+        return context
+
+
+class AuthorRequiredMixin(AccessMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if request.user != self.get_object().creator or request.user.is_staff:
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class TaskAuthorRequiredMixin(AccessMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if request.user != self.get_object().task.creator or request.user.is_staff:
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
 
 
 # Functions
@@ -45,7 +87,9 @@ def analyse_answer(question_query, user_answers) -> dict:
     for question, answer in user_answers.content.items():
         if question in right_answers.keys():
             if answer != right_answers[question]:
-                result['question'] = False
+                result[question] = False
             else:
-                result['question'] = True
-    return {}
+                result[question] = True
+        else:
+            result[question] = answer[0]
+    return result

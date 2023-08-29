@@ -1,6 +1,10 @@
 {% extends 'tasks/base.html' %}
 {% block content %}
     <div class="wrapper tasks_plane">
+        {% if not tasks %}
+        <p> Видимо, Вы еще не создали ни одного задания. Сделайте это прямо сейчас! </p>
+        <button class="task_ready"><a href="{% url 'createtask' %}">Создать задание</a></button>
+        {% else %}
         {% for task in tasks %}
         <div class="task_content task_plane">
             <p>{{task.title}}<span>id: {{task.identifier}}</span></p>
@@ -11,5 +15,6 @@
             </div>
         </div>
         {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}

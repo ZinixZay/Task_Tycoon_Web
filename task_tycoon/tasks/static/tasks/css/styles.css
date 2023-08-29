@@ -97,6 +97,12 @@ textarea:focus {
     min-height: 100vh;
 }
 
+.wrapper p {
+    font-size: 30px;
+    padding: 5px;
+    color: moccasin;
+}
+
 .delete_form {
     margin: 0 auto;
     gap: 30px;
@@ -141,7 +147,7 @@ textarea:focus {
     font-size: 30px;
     padding: 5px;
     transition: background-color .4s;
-    color: black;
+    color: black !important;
 }
 
 .submit_btn:hover{
@@ -255,6 +261,9 @@ textarea:focus {
     padding: 5px;
 }
 
+.task_ready a {
+    text-decoration: none;
+}
 
 .task_responses {
     display: flex;
@@ -410,4 +419,17 @@ textarea:focus {
 
 .solve_checkbox {
     transform: scale(1.5);
+}
+
+.tasky_name {
+    color: moccasin !important;
+}
+
+.false_answer {
+    background-color: #FA6C6C;
+    border-radius: 5px;
+    font-size: 30px;
+    padding: 5px;
+    transition: background-color .4s;
+    color: black !important;
 }
