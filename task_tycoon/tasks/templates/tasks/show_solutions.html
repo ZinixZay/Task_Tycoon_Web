@@ -1,0 +1,14 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+
+<div class="wrapper tasks_plane">
+    {% for answer in answers %}
+        <div class="task_content task_plane">
+            <p>{{ answer.user.username }}</p>
+            <button class="task_ready"><a class="create_but" href="{% url 'solution' answer.pk %}">Просмотреть</a></button>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

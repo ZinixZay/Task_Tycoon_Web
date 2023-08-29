@@ -9,6 +9,7 @@
         <input type="hidden" name="task_title" value="{{ task.title }}">
         <p>{{ task.title }}</p>
         {% for question in questions %}
+        <div class="q">
             <p class="question"> {{ question.title }} </p>
             {% if question.variants %}
                 {% for variant in question.variants %}
@@ -20,6 +21,7 @@
             {% else %}
                 <textarea class="answer_field" name="{{ question.title }}"></textarea>
             {% endif %}
+        </div>
         {% endfor %}
     </div>
     <button class="solve_btn">Отправить решение</button>

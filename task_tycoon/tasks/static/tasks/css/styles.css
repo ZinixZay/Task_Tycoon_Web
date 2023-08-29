@@ -176,6 +176,7 @@ textarea:focus {
 }
 
 .task_content p{
+    gap: 50px;
     margin-bottom: 15px;
 }
 
@@ -217,6 +218,7 @@ textarea:focus {
 }
 
 .task_content {
+    gap: 30px;
     margin-bottom: 30px;
     padding: 15px 30px;
     box-shadow: inset 5px 0 0 0 #FA6C6C;
@@ -345,6 +347,7 @@ textarea:focus {
 }
 
 .task_plane {
+    gap: 50px;
 }
 
 .task_plane span {
