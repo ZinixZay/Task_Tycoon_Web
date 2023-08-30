@@ -8,6 +8,9 @@ class TaskAPIView(APIView):
         result = request.data
         title = result.pop('0')
 
+        if len(Task.objects.filter(creator_id=request.user.id)) >= 3 or len(result.keys()) == 0:
+            return Response({'status': 'Forbidden', 'error': 'maximum amount of tasks'})
+
         new_task = Task.objects.create(title=title, creator_id=request.user.id)
 
         for num in result.keys():

@@ -6,14 +6,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
 from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
-    DataMixin, AuthorRequiredMixin, TaskAuthorRequiredMixin
+    DataMixin, AuthorRequiredMixin
 
 
 
 '''
 Админка
 Добавить .env
-Валидаторы на задание
 Задай вопрос, почему не могу импортировать модель в utils
 '''
 
@@ -43,7 +42,7 @@ class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
         return {**context, **c_def, 'result': answer_result}
 
 
-class SolutionTaskShow(DataMixin, LoginRequiredMixin, ListView):
+class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
     model = Answer
     template_name = 'tasks/show_solutions.html'
     context_object_name = 'answers'
@@ -57,6 +56,9 @@ class SolutionTaskShow(DataMixin, LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = Answer.objects.filter(task=self.kwargs['pk'])
         return queryset
+
+    def get_object(self):
+        return Task.objects.get(pk=self.kwargs['pk'])
 
 
 class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):

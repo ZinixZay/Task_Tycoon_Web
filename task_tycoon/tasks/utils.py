@@ -30,7 +30,7 @@ class AuthorRequiredMixin(AccessMixin):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         if request.user != self.get_object().creator or request.user.is_staff:
-            return redirect('home')
+            return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
 
