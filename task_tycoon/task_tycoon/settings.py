@@ -11,7 +11,16 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from .config import db_password, db_host, db_name, db_port, db_user
+from dotenv import load_dotenv, find_dotenv
+
+# .env loading
+load_dotenv(find_dotenv())
+db_password = os.getenv('db_password')
+db_host = os.getenv('db_host')
+db_name = os.getenv('db_name')
+db_port = os.getenv('db_port')
+db_user = os.getenv('db_user')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
