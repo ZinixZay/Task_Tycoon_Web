@@ -195,6 +195,9 @@ textarea:focus {
 }
 
 .task_add {
+    display: flex;
+    flex: 33.3%;
+    gap: 10px;
     margin-bottom: 30px;
 }
 

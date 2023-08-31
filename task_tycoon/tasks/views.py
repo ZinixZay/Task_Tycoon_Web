@@ -36,7 +36,7 @@ class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.set_context(title=f'Ответы на "{kwargs["object"].task}"')
         question_query = Question.objects.filter(task=kwargs["object"].task)
-        user_solution = Answer.objects.get(task=kwargs["object"].task, user=self.request.user)
+        user_solution = kwargs["object"]
         answer_result = analyse_answer(question_query, user_solution)
         return {**context, **c_def, 'result': answer_result}
 
