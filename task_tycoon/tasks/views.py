@@ -11,8 +11,7 @@ from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, 
 
 
 '''
-Админка
-Задай вопрос, почему не могу импортировать модель в utils
+Комментарии
 '''
 
 
