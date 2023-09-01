@@ -19,6 +19,9 @@ from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, 
 
 
 class Index(DataMixin, View):
+    """
+    Rendering main page
+    """
     def get(self, request):
         if self.request.user.is_authenticated:
             return render(self.request, template_name='tasks/index.html', context=self.set_context(title='Главная'))
@@ -27,6 +30,9 @@ class Index(DataMixin, View):
 
 
 class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
+    """
+    Detail View of user's solution. Answer analyse function comes from utils.
+    """
     model = Answer
     template_name = 'tasks/show_solution.html'
     context_object_name = 'answer'
@@ -41,6 +47,9 @@ class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
 
 
 class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
+    """
+    Shows all answers for task
+    """
     model = Answer
     template_name = 'tasks/show_solutions.html'
     context_object_name = 'answers'
@@ -59,22 +68,28 @@ class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
         return Task.objects.get(pk=self.kwargs['pk'])
 
 
-class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):
-    login_url = 'answer'
-    model = Task
-    template_name = 'tasks/task_answer.html'
-    context_object_name = 'task'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        questions = Question.objects.filter(task_id=self.kwargs['pk'])
-
-        c_def = self.set_context(title=kwargs['object'].title, questions=questions)
-        return {**context, **c_def}
+# class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):
+#     """
+#     Shows task content with right and false variants in test questions or non-test questions type
+#     """
+#     login_url = 'answer'
+#     model = Task
+#     template_name = 'tasks/task_answer.html'
+#     context_object_name = 'task'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         questions = Question.objects.filter(task_id=self.kwargs['pk'])
+#
+#         c_def = self.set_context(title=kwargs['object'].title, questions=questions)
+#         return {**context, **c_def}
 
 
 class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
+    """
+    Shows page where user can find task by identifier
+    """
     template_name = 'tasks/task_search.html'
 
     def get_context_data(self, **kwargs):
@@ -94,6 +109,9 @@ class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
 
 
 class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
+    """
+    Shows page with all questions for one task, where user can solve them
+    """
     template_name = 'tasks/solve_task.html'
 
     def get_context_data(self, **kwargs):
@@ -113,11 +131,17 @@ class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
 
 
 class CreateTask(DataMixin, LoginRequiredMixin, View):
+    """
+    Renders page with task creation
+    """
     def get(self, request):
         return render(request, 'tasks/create_task.html', context=self.set_context(title='Создание задания'))
 
 
 class MyTasks(DataMixin, LoginRequiredMixin, ListView):
+    """
+    Page with all user created tasks
+    """
     model = Task
     template_name = "tasks/tasks_view.html"
     context_object_name = 'tasks'
@@ -135,6 +159,9 @@ class MyTasks(DataMixin, LoginRequiredMixin, ListView):
 
 
 class ShowTask(DataMixin, AuthorRequiredMixin, DetailView):
+    """
+    Shows task content with right and false variants in test questions or non-test questions type
+    """
     model = Task
     template_name = 'tasks/show_task.html'
     context_object_name = 'task'
@@ -149,6 +176,9 @@ class ShowTask(DataMixin, AuthorRequiredMixin, DetailView):
 
 
 class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
+    """
+    Confirmation of deleting
+    """
     model = Task
     template_name = 'tasks/delete_task.html'
     success_url = reverse_lazy('tasks')

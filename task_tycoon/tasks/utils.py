@@ -12,12 +12,16 @@ menu = [
     {'title': 'Решить задание', 'url_name': 'search'}
 ]
 
+identifiers = list()
+
 
 # Mixins
 
 
 class DataMixin:
-
+    """
+    Collecting args and adding menu to a page
+    """
     def set_context(self, **kwargs):
         context = kwargs
         context['menu'] = menu
@@ -25,33 +29,39 @@ class DataMixin:
 
 
 class AuthorRequiredMixin(AccessMixin):
-
+    """
+    Permission mixin only for object author
+    """
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
-        if request.user != self.get_object().creator or request.user.is_staff:
+        if request.user != self.get_object().creator:
             return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
-
-
-class TaskAuthorRequiredMixin(AccessMixin):
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        if request.user != self.get_object().task.creator or request.user.is_staff:
-            return redirect('home')
         return super().dispatch(request, *args, **kwargs)
 
 
 # Functions
 
 
-def generate_identifier():
+def generate_identifier() -> int:
+    """
+    Generating random identifier for task. Checks if it is unique
+    :return: identifier
+    """
+    while True:
+        identifier = randint(100000, 999999)
+        if identifier not in identifiers:
+            break
+    identifiers.append(identifier)
     return randint(100000, 999999)
 
 
 def parse_answer_to_dict(response) -> dict:
+    """
+    Parsing user's answer to a python dict
+    :param response: user's task answer
+    :return: parsed user's answer
+    """
     str_response = str(response)
     str_response = str_response.replace("'", '"')
     dict_response = json.loads(str_response[12:len(str_response) - 1])
@@ -68,6 +78,13 @@ def parse_answer_to_dict(response) -> dict:
 
 
 def check_solution_exists(Answer, task, user) -> bool:
+    """
+    Check if user already answered this task. if yes -> does not accept this solution
+    :param Answer: Answer model
+    :param task: solution task
+    :param user: solution user
+    :return: True, if solution exists
+    """
     solution = Answer.objects.filter(task=task, user=user)
     if solution:
         return True
@@ -75,8 +92,12 @@ def check_solution_exists(Answer, task, user) -> bool:
 
 
 def analyse_answer(question_query, user_answers) -> dict:
-    # question_query parse
-
+    """
+    Gets user's solution, right solution from data and compare them. Forming a dict with right and false answers
+    :param question_query: All in-task questions
+    :param user_answers: User's solution
+    :return: python dict with rightness of answers
+    """
     right_answers = {}
     for question in question_query:
         if question.variants:

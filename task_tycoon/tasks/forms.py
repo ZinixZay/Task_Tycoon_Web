@@ -1,5 +1,5 @@
 from django import forms
-from tasks.models import Task
+from .models import Task
 
 
 class SearchTaskForm(forms.Form):
