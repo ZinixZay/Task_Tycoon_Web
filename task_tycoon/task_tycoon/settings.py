@@ -15,11 +15,11 @@ from dotenv import load_dotenv, find_dotenv
 
 # .env loading
 load_dotenv(find_dotenv())
-db_password = os.getenv('db_password')
-db_host = os.getenv('db_host')
-db_name = os.getenv('db_name')
-db_port = os.getenv('db_port')
-db_user = os.getenv('db_user')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST')
+db_name = os.getenv('DB_NAME')
+db_port = os.getenv('DB_PORT')
+db_user = os.getenv('DB_USER')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9)*p9@sr8ub*w_$)kuf(=pw3mb$wb=2(sg_*641=6-!hled93p'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
