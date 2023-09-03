@@ -2,6 +2,7 @@ from random import randint
 import json
 from django.contrib.auth.mixins import AccessMixin
 from django.shortcuts import redirect
+from .models import Task
 
 # Variables
 
@@ -49,11 +50,11 @@ def generate_identifier() -> int:
     :return: identifier
     """
     while True:
-        identifier = randint(100000, 999999)
+        identifier = randint(1, 3)
         if identifier not in identifiers:
             break
     identifiers.append(identifier)
-    return randint(100000, 999999)
+    return identifier
 
 
 def parse_answer_to_dict(response) -> dict:

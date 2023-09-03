@@ -5,9 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
-from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
+from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, delete_task, \
     DataMixin, AuthorRequiredMixin
-
 
 
 '''
@@ -181,10 +180,13 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
     """
     model = Task
     template_name = 'tasks/delete_task.html'
-    success_url = reverse_lazy('tasks')
     context_object_name = 'task'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.set_context(title='Удаление задания')
         return {**context, **c_def}
+
+    def get_success_url(self):
+
+        return reverse_lazy('tasks')
