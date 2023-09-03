@@ -1,21 +1,16 @@
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
-from .models import Task, Question
+from .models import Task, Question, Answer
 from .serializers import TasksSerializer
 from .utils import generate_slug
 
 
-class ShowTasksAPIView(ListAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TasksSerializer
+class TaskAPIView(APIView):
+    def get(self, request):
+        tasks = Task.objects.all().values()
+        return Response({'tasks': list(tasks)})
 
-
-class CreateTaskAPIView(APIView):
-    """
-    API, creates task on post request, validating null from
-    """
     def post(self, request):
         result = request.data
         title = result.pop('0')
@@ -35,3 +30,15 @@ class CreateTaskAPIView(APIView):
             else:
                 Question.objects.create(title=question['task_name'], test_type=False, task=new_task)
         return Response({'status': 'OK', 'identifier': new_task.identifier})
+
+
+class AnswersAPIView(APIView):
+    def get(self, request):
+        answers = Answer.objects.all().values()
+        return Response({'answers': list(answers)})
+
+
+class QuestionAPIView(APIView):
+    def get(self, request):
+        question = Question.objects.all().values()
+        return Response({'questions': list(question)})

@@ -39,7 +39,7 @@ document.getElementById("submit-btn").addEventListener("click", function (e) {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
 
-  fetch("http://127.0.0.1:8000/api/v1/addtask", {
+  fetch("http://127.0.0.1:8000/api/v1/tasks/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
