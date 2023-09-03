@@ -12,6 +12,7 @@ class Task(models.Model):
     addition = models.FileField(verbose_name='Материалы', null=True)
     creator = models.ForeignKey(User, verbose_name='Создатель', on_delete=models.CASCADE)
     identifier = models.IntegerField(verbose_name='Идентификатор', default=generate_identifier)
+    slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
 
     def __str__(self):
         return self.title

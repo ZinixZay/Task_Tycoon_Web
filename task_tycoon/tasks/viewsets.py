@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
-from .models import Task, Question, Answer
+from .models import Task, Question
 from .serializers import TasksSerializer
+from .utils import generate_slug
 
 
 class ShowTasksAPIView(ListAPIView):
@@ -22,7 +23,9 @@ class CreateTaskAPIView(APIView):
         if len(Task.objects.filter(creator_id=request.user.id)) >= 3 or len(result.keys()) == 0:
             return Response({'status': 'Forbidden', 'error': 'maximum amount of tasks'})
 
-        new_task = Task.objects.create(title=title, creator_id=request.user.id)
+        slug = generate_slug(title=title, task_model=Task)
+
+        new_task = Task.objects.create(title=title, creator_id=request.user.id, slug=slug)
 
         for num in result.keys():
             question = result[num]

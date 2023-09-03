@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm
-from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, delete_task, \
+from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
     DataMixin, AuthorRequiredMixin
 
 
@@ -55,16 +55,16 @@ class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        task_title = Task.objects.get(pk=self.kwargs['pk']).title
+        task_title = Task.objects.get(slug=self.kwargs['slug']).title
         c_def = self.set_context(title=f'Ответы на "{task_title}"')
         return {**context, **c_def}
 
     def get_queryset(self):
-        queryset = Answer.objects.filter(task=self.kwargs['pk'])
+        queryset = Answer.objects.filter(task=Task.objects.get(slug=self.kwargs['slug']))
         return queryset
 
     def get_object(self):
-        return Task.objects.get(pk=self.kwargs['pk'])
+        return Task.objects.get(slug=self.kwargs['slug'])
 
 
 # class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):
@@ -102,7 +102,7 @@ class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
             identifier = form.cleaned_data['identifier']
             task = Task.objects.filter(identifier=identifier)[0]
             if task:
-                return redirect('solve', identifier=identifier)
+                return redirect('solve', slug=task.slug)
             else:
                 return redirect('search')
 
@@ -114,7 +114,7 @@ class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
     template_name = 'tasks/solve_task.html'
 
     def get_context_data(self, **kwargs):
-        task = Task.objects.filter(identifier=kwargs['identifier'])[0]
+        task = Task.objects.filter(slug=kwargs['slug'])[0]
         questions = Question.objects.filter(task_id=task.id)
         context = super().get_context_data(**kwargs)
         c_def = self.set_context(title=f'Решение {task.title}', questions=questions, task=task)
@@ -168,7 +168,7 @@ class ShowTask(DataMixin, AuthorRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        questions = Question.objects.filter(task_id=self.kwargs['pk'])
+        questions = Question.objects.filter(task=Task.objects.get(slug=self.kwargs['slug']))
 
         c_def = self.set_context(title=kwargs['object'].title, questions=questions)
         return {**context, **c_def}
@@ -181,6 +181,7 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
     model = Task
     template_name = 'tasks/delete_task.html'
     context_object_name = 'task'
+    slug_field = 'slug'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -188,5 +189,4 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
         return {**context, **c_def}
 
     def get_success_url(self):
-
         return reverse_lazy('tasks')

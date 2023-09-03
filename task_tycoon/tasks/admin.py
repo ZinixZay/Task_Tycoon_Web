@@ -5,11 +5,12 @@ from .models import Task, Question, Answer
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'identifier', 'creator', 'addition')
+    list_display = ('id', 'title', 'identifier', 'creator', 'addition', 'slug')
     list_display_links = ('id', 'identifier')
     search_fields = ('title', 'identifier', )
     list_editable = ('title', )
     list_filter = ('creator', 'addition')
+    prepopulated_fields = {'slug': ('title',)}
 
 
 class QuestionAdmin(admin.ModelAdmin):

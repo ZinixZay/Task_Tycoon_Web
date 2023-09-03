@@ -1,8 +1,9 @@
 from random import randint
 import json
+from transliterate import translit
+
 from django.contrib.auth.mixins import AccessMixin
-from django.shortcuts import redirect
-from .models import Task
+from django.utils.text import slugify
 
 # Variables
 
@@ -14,7 +15,6 @@ menu = [
 ]
 
 identifiers = list()
-
 
 # Mixins
 
@@ -44,14 +44,34 @@ class AuthorRequiredMixin(AccessMixin):
 # Functions
 
 
+def generate_slug(title: str, task_model) -> str:
+    """
+    Generating slug for new task
+    :param title: task's title
+    :param task_model: Task model
+    :return: generated slug
+    """
+    slug = slugify(title, allow_unicode=True)
+    slug = translit(slug, 'ru', reversed=True)
+    similar_slugs = sorted([i.slug for i in task_model.objects.all() if slug in i.slug])
+    match len(similar_slugs):
+        case 0:
+            return slug
+        case 1:
+            return slug + '1'
+    slug = similar_slugs[-1]
+    return slug[:len(slug) - 1] + (str(int(slug[-1]) + 1))
+
+
 def generate_identifier() -> int:
     """
     Generating random identifier for task. Checks if it is unique
     :return: identifier
     """
+    from .models import Task
     while True:
-        identifier = randint(1, 3)
-        if identifier not in identifiers:
+        identifier = randint(100000, 999999)
+        if identifier not in [i.identifier for i in Task.objects.all()]:
             break
     identifiers.append(identifier)
     return identifier
