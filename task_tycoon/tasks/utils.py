@@ -53,6 +53,7 @@ def generate_slug(title: str, task_model) -> str:
     """
     slug = slugify(title, allow_unicode=True)
     slug = translit(slug, 'ru', reversed=True)
+    slug = slug.replace("'", "")
     similar_slugs = sorted([i.slug for i in task_model.objects.all() if slug in i.slug])
     match len(similar_slugs):
         case 0:
