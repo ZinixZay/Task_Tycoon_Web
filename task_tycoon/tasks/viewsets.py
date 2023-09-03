@@ -1,8 +1,9 @@
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Task, Question, Answer
-from .serializers import TasksSerializer
+from .serializers import AnswerSerializer
 from .utils import generate_slug
 
 
@@ -32,10 +33,20 @@ class TaskAPIView(APIView):
         return Response({'status': 'OK', 'identifier': new_task.identifier})
 
 
-class AnswersAPIView(APIView):
-    def get(self, request):
-        answers = Answer.objects.all().values()
-        return Response({'answers': list(answers)})
+class AnswerAPIView(ListCreateAPIView):
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        if 'id' in self.request.data.keys():
+            result = Answer.objects.filter(id=self.request.data['id']).values()
+        elif 'user' in self.request.data.keys():
+            result = Answer.objects.filter(user_id=self.request.data['user']).values()
+        elif 'task' in self.request.data.keys():
+            result = Answer.objects.filter(task_id=self.request.data['task']).values()
+        else:
+            return []
+        result = result
+        return result
 
 
 class QuestionAPIView(APIView):

@@ -1,11 +1,11 @@
 from django.urls import path
 from .views import CreateTask, MyTasks, Index, ShowTask, DeleteTask, SearchTask, \
     SolveTask, SolutionTaskShow, SolutionShow
-from .viewsets import TaskAPIView, AnswersAPIView, QuestionAPIView
+from .viewsets import TaskAPIView, AnswerAPIView, QuestionAPIView
 
 urlpatterns = [
     path('api/v1/tasks/', TaskAPIView.as_view(), name='apitasks'),
-    path('api/v1/answers/', AnswersAPIView.as_view(), name='apianswers'),
+    path('api/v1/answers/', AnswerAPIView.as_view(), name='apianswers'),
     path('api/v1/questions/', QuestionAPIView.as_view(), name='apiquestions'),
 
     path('task_solve/<slug:slug>/', SolveTask.as_view(), name='solve'),
