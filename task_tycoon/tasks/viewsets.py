@@ -1,18 +1,19 @@
+from rest_framework.decorators import action
+from rest_framework import viewsets
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Task, Question, Answer
-from .serializers import AnswerSerializer
+from .serializers import AnswerSerializer, TaskSerializer, QuestionSerializer
 from .utils import generate_slug
 
 
-class TaskAPIView(APIView):
-    def get(self, request):
-        tasks = Task.objects.all().values()
-        return Response({'tasks': list(tasks)})
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
-    def post(self, request):
+    def create(self, request, **kwargs):
         result = request.data
         title = result.pop('0')
 
@@ -33,23 +34,26 @@ class TaskAPIView(APIView):
         return Response({'status': 'OK', 'identifier': new_task.identifier})
 
 
-class AnswerAPIView(ListCreateAPIView):
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
 
-    def get_queryset(self):
-        if 'id' in self.request.data.keys():
-            result = Answer.objects.filter(id=self.request.data['id']).values()
-        elif 'user' in self.request.data.keys():
-            result = Answer.objects.filter(user_id=self.request.data['user']).values()
-        elif 'task' in self.request.data.keys():
-            result = Answer.objects.filter(task_id=self.request.data['task']).values()
-        else:
-            return []
-        result = result
-        return result
+    @action(methods=['get'], detail=True)
+    def user(self, request, pk=None):
+        result = Answer.objects.filter(user_id=pk).values()
+        return Response({'answers': result})
+
+    @action(methods=['get'], detail=True)
+    def task(self, request, pk=None):
+        result = Answer.objects.filter(task_id=pk).values()
+        return Response({'answers': result})
 
 
-class QuestionAPIView(APIView):
-    def get(self, request):
-        question = Question.objects.all().values()
-        return Response({'questions': list(question)})
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    @action(methods=['get'], detail=True)
+    def task(self, request, pk=None):
+        result = Question.objects.filter(task_id=pk).values()
+        return Response({'questions': result})
