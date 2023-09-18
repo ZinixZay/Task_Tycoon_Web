@@ -1,12 +1,11 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Task, Question, Answer
 from .serializers import AnswerSerializer, TaskSerializer, QuestionSerializer
 from .utils import generate_slug
+from .permissions import IsAuthor
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -37,6 +36,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    permission_classes = (IsAuthor, )
 
     @action(methods=['get'], detail=True)
     def user(self, request, pk=None):
