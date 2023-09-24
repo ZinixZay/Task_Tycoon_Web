@@ -5,7 +5,7 @@ from .models import Task, Question, Answer
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'identifier', 'creator', 'addition', 'slug')
+    list_display = ('id', 'title', 'identifier', 'creator', 'addition', 'slug', 'upload')
     list_display_links = ('id', 'identifier')
     search_fields = ('title', 'identifier', )
     list_editable = ('title', )

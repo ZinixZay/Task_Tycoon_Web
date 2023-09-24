@@ -436,3 +436,7 @@ textarea:focus {
     transition: background-color .4s;
     color: black !important;
 }
+
+.whitep {
+    color: white !important;
+}

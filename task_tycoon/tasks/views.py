@@ -1,31 +1,18 @@
+import os
+
+from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Task, Question, Answer
-from .forms import SearchTaskForm
+from .forms import SearchTaskForm, UploadFileForm
 from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
     DataMixin, AuthorRequiredMixin
 
 
-'''
-Комментарии
-'''
-
-
 # Create your views here.
-
-
-class Index(DataMixin, View):
-    """
-    Rendering main page
-    """
-    def get(self, request):
-        if self.request.user.is_authenticated:
-            return render(self.request, template_name='tasks/index.html', context=self.set_context(title='Главная'))
-        else:
-            return redirect('registration')
 
 
 class SolutionShow(DataMixin, LoginRequiredMixin, DetailView):
@@ -65,24 +52,6 @@ class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
 
     def get_object(self):
         return Task.objects.get(slug=self.kwargs['slug'])
-
-
-# class AnswerTask(DataMixin, AuthorRequiredMixin, DetailView):
-#     """
-#     Shows task content with right and false variants in test questions or non-test questions type
-#     """
-#     login_url = 'answer'
-#     model = Task
-#     template_name = 'tasks/task_answer.html'
-#     context_object_name = 'task'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#
-#         questions = Question.objects.filter(task_id=self.kwargs['pk'])
-#
-#         c_def = self.set_context(title=kwargs['object'].title, questions=questions)
-#         return {**context, **c_def}
 
 
 class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
@@ -190,3 +159,42 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('tasks')
+
+
+def DownloadFile(request, slug):
+    task = Task.objects.get(slug=slug)
+    return FileResponse(task.upload, as_attachment=True)
+
+
+class UploadFile(DataMixin, View, AuthorRequiredMixin):
+    def post(self, request, slug):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            if file.size > 50000000:
+                return redirect('home')
+            else:
+                task = Task.objects.get(slug=slug)
+                if task.upload:
+                    os.remove(task.upload.path)
+            task = Task.objects.get(slug=slug)
+            task.upload = file
+            task.save()
+            return redirect('home')
+        else:
+            return reverse_lazy('tasks')
+
+    def get(self, request, slug):
+        return render(self.request, template_name='tasks/upload.html',
+                      context=self.set_context(title='Загрузка файла', form=UploadFileForm, slug=slug))
+
+
+class Index(DataMixin, View):
+    """
+    Rendering main page
+    """
+    def get(self, request):
+        if self.request.user.is_authenticated:
+            return render(self.request, template_name='tasks/index.html', context=self.set_context(title='Главная'))
+        else:
+            return redirect('registration')

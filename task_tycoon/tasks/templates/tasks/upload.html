@@ -1,0 +1,13 @@
+{% extends 'tasks/base.html' %}
+{% block content %}
+
+<div class="wrapper">
+<form action="{% url 'upload' slug %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+        {{ form.file }}
+    </p>
+    <p><input type="submit" value="Добавить" /></p>
+</form>
+</div>
+{% endblock %}

@@ -12,6 +12,7 @@ class Task(models.Model):
     addition = models.FileField(verbose_name='Материалы', null=True)
     creator = models.ForeignKey(User, verbose_name='Создатель', on_delete=models.CASCADE)
     identifier = models.IntegerField(verbose_name='Идентификатор', default=generate_identifier)
+    upload = models.FileField(upload_to="uploads/%Y/%m/%d/", null=True)
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
 
     def __str__(self):
@@ -19,6 +20,8 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task', kwargs={'slug': self.slug})
+
+
 
     class Meta:
         ordering = ('creator', 'title')

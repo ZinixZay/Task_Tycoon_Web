@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import CreateTask, MyTasks, Index, ShowTask, DeleteTask, SearchTask, \
-    SolveTask, SolutionTaskShow, SolutionShow
+    SolveTask, SolutionTaskShow, SolutionShow, UploadFile, DownloadFile
 from rest_framework import routers
 from .viewsets import TaskViewSet, AnswerViewSet, QuestionViewSet
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path('api/v1/', include(router_answers.urls)),
     path('api/v1/', include(router_questions.urls)),
 
+    path('download/<slug:slug>/', DownloadFile, name='download'),
+    path('upload/<slug:slug>/', UploadFile.as_view(), name='upload'),
     path('task_solve/<slug:slug>/', SolveTask.as_view(), name='solve'),
     path('task_solve/', SolveTask.as_view(), name='solve'),
     path('task_search/', SearchTask.as_view(), name='search'),

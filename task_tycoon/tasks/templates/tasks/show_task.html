@@ -3,6 +3,9 @@
 {% block content %}
 
 <div class="wrapper tasks_plane">
+    {% if task.upload %}
+        <button class="task_ready"><a class="create_but" href="{% url 'download' task.slug %}">Скачать файл</a></button>
+    {% endif %}
         {% for question in questions %}
         <div class="task_content task_plane">
             <p class="question"> {{ question.title }} </p>
