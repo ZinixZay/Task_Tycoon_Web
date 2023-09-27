@@ -69,9 +69,9 @@ class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
         form = SearchTaskForm(self.request.POST)
         if form.is_valid():
             identifier = form.cleaned_data['identifier']
-            task = Task.objects.filter(identifier=identifier)[0]
+            task = Task.objects.filter(identifier=identifier)
             if task:
-                return redirect('solve', slug=task.slug)
+                return redirect('solve', slug=task[0].slug)
             else:
                 return redirect('search')
 
