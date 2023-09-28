@@ -160,6 +160,13 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('tasks')
 
+    def form_valid(self, *args, **kwargs):
+        task = self.get_object()
+        if task.upload:
+            os.remove(task.upload.path)
+        task.delete()
+        return redirect('tasks')
+
 
 def DownloadFile(request, slug):
     task = Task.objects.get(slug=slug)

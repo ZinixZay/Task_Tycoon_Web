@@ -7,6 +7,8 @@ from .serializers import AnswerSerializer, TaskSerializer, QuestionSerializer
 from .utils import generate_slug
 from .permissions import IsAuthor
 
+import os
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
