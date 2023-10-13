@@ -14,7 +14,6 @@ menu = [
     {'title': 'Решить задание', 'url_name': 'search'}
 ]
 
-identifiers = list()
 
 # Mixins
 

@@ -1,6 +1,6 @@
 import os
 
-from django.http import FileResponse, HttpResponseRedirect
+from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, DeleteView, TemplateView
@@ -168,12 +168,21 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
         return redirect('tasks')
 
 
-def DownloadFile(request, slug):
+def download_file(request, slug):
+    """
+    Downloading connected file with task
+    :param request:
+    :param slug: slug of a task
+    :return: file, connected with task
+    """
     task = Task.objects.get(slug=slug)
     return FileResponse(task.upload, as_attachment=True)
 
 
 class UploadFile(DataMixin, View, AuthorRequiredMixin):
+    """
+    Uploading file to a server and connects it with a task
+    """
     def post(self, request, slug):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
