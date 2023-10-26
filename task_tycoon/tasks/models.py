@@ -22,7 +22,6 @@ class Task(models.Model):
         return reverse('task', kwargs={'slug': self.slug})
 
 
-
     class Meta:
         ordering = ('creator', 'title')
         verbose_name = 'Задание'
