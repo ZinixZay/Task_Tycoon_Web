@@ -19,6 +19,7 @@ document.getElementById("submit-btn").addEventListener("click", function (e) {
         objFullResponse.push({
           response_name: responseName,
           response_right: responseCheckbox,
+
         })
       })
 
@@ -27,9 +28,19 @@ document.getElementById("submit-btn").addEventListener("click", function (e) {
         responses: objFullResponse,
       }
     } else {
+
+      const objFullResponse = []
+        console.log(task)
+      const responseName = task.querySelector('.task_name').value
+      const responseTextarea = task.querySelector('.answer_field').value
+
+      objFullResponse.push(
+        responseTextarea,
+      )
+
       formDataObject[key + 1] = {
         task_name: task_name,
-        responses: 0,
+        response_textarea: objFullResponse,
       }
     }
   })

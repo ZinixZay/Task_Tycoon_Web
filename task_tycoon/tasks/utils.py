@@ -122,17 +122,23 @@ def analyse_answer(question_query, user_answers) -> dict:
     """
     right_answers = {}
     for question in question_query:
-        if question.variants:
+        if question.test_type:
             right_answers[question.title] = [i['response_name'] for i in list(
                 filter(lambda x: x['response_right'], question.variants))]
+        else:
+            right_answers[question.title] = question.variants
 
     result = {}
     for question, answer in user_answers.content.items():
         if question in right_answers.keys():
-            if answer != right_answers[question]:
-                result[question] = False
+            if type(right_answers[question]) is str:
+                if answer[0] == right_answers[question]:
+                    result[question] = True
+                else:
+                    result[question] = False
             else:
-                result[question] = True
-        else:
-            result[question] = answer[0]
+                if answer != right_answers[question]:
+                    result[question] = False
+                else:
+                    result[question] = True
     return result

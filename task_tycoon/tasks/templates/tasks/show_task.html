@@ -9,7 +9,7 @@
         {% for question in questions %}
         <div class="task_content task_plane">
             <p class="question"> {{ question.title }} </p>
-            {% if question.variants %}
+            {% if question.test_type %}
                 {% for variant in question.variants %}
                     {% if variant.response_right %}
                         <p class="right_response"> {{ variant.response_name }}</p>
@@ -18,6 +18,8 @@
                     {% endif %}
                     <br>
                 {% endfor %}
+            {% else %}
+                <p class="right_response"> {{ question.variants }} </p>
             {% endif %}
         </div>
         {% endfor %}

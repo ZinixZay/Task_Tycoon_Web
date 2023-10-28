@@ -92,8 +92,8 @@ class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
     def post(self, *args):
         answer = parse_answer_to_dict(self.request.POST)
         task = Task.objects.get(title=answer.pop('task_title'))
-        if check_solution_exists(Answer, task, self.request.user):
-            return redirect('home')
+        # if check_solution_exists(Answer, task, self.request.user):
+        #     return redirect('home')
         Answer.objects.create(user=self.request.user, task=task, content=answer)
         return redirect('home')
 

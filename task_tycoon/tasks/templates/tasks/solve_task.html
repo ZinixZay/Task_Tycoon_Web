@@ -12,7 +12,7 @@
         <p>{{ task.title }}</p>
         {% for question in questions %}
             <p class="question"> {{ question.title }} </p>
-            {% if question.variants %}
+            {% if question.test_type %}
                 {% for variant in question.variants %}
                     <div class="test_variants">
                         <label class="variant">{{ variant.response_name }}</label>

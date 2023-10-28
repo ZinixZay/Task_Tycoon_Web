@@ -239,6 +239,14 @@ textarea:focus {
     margin-bottom: 15px;
 }
 
+.task_info_text {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
 .task_name {
     color: black;
     width: 60%;
@@ -439,4 +447,8 @@ textarea:focus {
 
 .whitep {
     color: white !important;
+}
+
+.txtara {
+    height: 150 px;
 }

@@ -14,6 +14,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, **kwargs):
         result = request.data
+        print(result)
         title = result.pop('0')
 
         if len(Task.objects.filter(creator_id=request.user.id)) >= 3 or len(result.keys()) == 0:
@@ -25,11 +26,12 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         for num in result.keys():
             question = result[num]
-            if question['responses']:
+            if 'responses' in question.keys():
                 Question.objects.create(title=question['task_name'], test_type=True,
                                         variants=question['responses'], task=new_task)
             else:
-                Question.objects.create(title=question['task_name'], test_type=False, task=new_task)
+                Question.objects.create(title=question['task_name'], test_type=False,
+                                        task=new_task, variants=question["response_textarea"][0])
         return Response({'status': 'OK', 'identifier': new_task.identifier})
 
 

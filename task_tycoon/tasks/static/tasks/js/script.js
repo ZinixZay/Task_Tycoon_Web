@@ -82,7 +82,6 @@ submitButtons.forEach((button) => {
     newCount.textContent = count
     newResponseDiv.insertBefore(newCount, newResponseDiv.firstChild);
 
-
     const form = e.target.closest('form');
 
     const taskName = form.querySelector('.task_name');
@@ -93,6 +92,9 @@ submitButtons.forEach((button) => {
 
     newResponseDiv.appendChild(clonedTaskName);
     newResponseDiv.appendChild(newTaskDel);
+
+    const newFullResponse = document.createElement('div');
+    newFullResponse.classList.add('task_full-response');
 
     if (form.querySelector('.task_response_name')) {
       newResponseDiv.classList.add('task_test');
@@ -120,12 +122,19 @@ submitButtons.forEach((button) => {
         taskName.value = ''
         checkboxInput.checked = false;
       });
+
     } else {
       newResponseDiv.classList.add('task_detailed');
+
+      const taskResponseDiv = document.querySelector('.task_info_text');
+      const responseTextarea = taskResponseDiv.querySelector('.answer_field')
+      const cloneResponseNameInput = responseTextarea.cloneNode(true);
+      newResponseDiv.appendChild(cloneResponseNameInput);
 
       allTasksDiv.appendChild(newResponseDiv);
 
       taskName.value = ''
+      responseTextarea.value = ''
     }
 
     const parentBlock = document.querySelector('.task_responses');
@@ -135,43 +144,3 @@ submitButtons.forEach((button) => {
     parentBlock.appendChild(firstElement);
   })
 })
-
-
-
-//Реализация кнопки удаления ответа
-const taskResponses = document.querySelector('.wrapper');
-
-taskResponses.addEventListener('click', (e) => {
-  if (e.target.classList.contains('task_response_del')) {
-
-    const taskResponse = e.target.parentElement;
-
-    taskResponse.remove();
-  }
-});
-
-
-const taskDel = document.querySelector('.all-tasks');
-const paragraphs = taskDel.querySelectorAll('.task_content p')
-
-taskDel.addEventListener('click', (e) => {
-  e.stopPropagation()
-  if (e.target.classList.contains('task_task_del')) {
-    e.preventDefault();
-
-    const taskResponse = e.target.parentElement;
-    taskResponse.remove();
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
