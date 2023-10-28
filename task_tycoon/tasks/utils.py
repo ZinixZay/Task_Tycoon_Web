@@ -5,6 +5,10 @@ from transliterate import translit
 from django.contrib.auth.mixins import AccessMixin
 from django.utils.text import slugify
 
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Alignment
+from openpyxl.utils.cell import get_column_letter
+
 # Variables
 
 menu = [
@@ -140,3 +144,38 @@ def analyse_answer(question_query, user_answers) -> dict:
                 else:
                     result[question] = True
     return result
+
+
+def generate_excel(task, answers, questions):
+    wb = Workbook()
+    ws = wb.active
+
+    print(task)
+    print(answers)
+    print(questions)
+
+    ws.title = task.title
+    ws["A1"] = "№"
+    ws["B1"] = "Ученик"
+    ws.column_dimensions["B"].width = 25
+
+    curr_column = 3
+    curr_row = 1
+
+    for question in questions:
+        ws.column_dimensions[get_column_letter(curr_column)].width = len(question.title) + 2
+        ws.cell(row=curr_row, column=curr_column, value=question.title)
+        curr_column += 1
+    for col in ws.iter_cols(min_row=1, max_row=len(set([i.user_id for i in answers])),
+                            max_col=len(questions) + 4, min_col=1):
+        for cell in col:
+            cell.alignment = Alignment(horizontal='center')
+
+    ws.cell(row=curr_row, column=curr_column, value='Кол-во верных ответов')
+    ws.column_dimensions[get_column_letter(curr_column)].width = 25
+
+    ws.cell(row=curr_row, column=curr_column + 1, value='Кол-во попыток')
+    ws.column_dimensions[get_column_letter(curr_column + 1)].width = 17
+
+    wb.save(f"{task.title}.xlsx")
+    return None

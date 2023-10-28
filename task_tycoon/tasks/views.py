@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm, UploadFileForm
 from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
-    DataMixin, AuthorRequiredMixin
+    DataMixin, AuthorRequiredMixin, generate_excel
 
 
 # Create your views here.
@@ -43,7 +43,7 @@ class SolutionTaskShow(DataMixin, AuthorRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         task_title = Task.objects.get(slug=self.kwargs['slug']).title
-        c_def = self.set_context(title=f'Ответы на "{task_title}"')
+        c_def = self.set_context(title=f'Ответы на "{task_title}"', slug=self.kwargs['slug'])
         return {**context, **c_def}
 
     def get_queryset(self):
@@ -177,6 +177,14 @@ def download_file(request, slug):
     """
     task = Task.objects.get(slug=slug)
     return FileResponse(task.upload, as_attachment=True)
+
+
+def download_excel(request, slug):
+    task = Task.objects.get(slug=slug)
+    answers = Answer.objects.filter(task=task)
+    questions = Question.objects.filter(task=task)
+    excel_file = generate_excel(task, answers, questions)
+    return redirect("tasks")
 
 
 class UploadFile(DataMixin, View, AuthorRequiredMixin):

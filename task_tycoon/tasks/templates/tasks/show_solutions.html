@@ -3,6 +3,8 @@
 {% block content %}
 
 <div class="wrapper tasks_plane">
+    <p>{{ title }}</p>
+    <button class="task_ready"><a class="create_but" href="{% url 'excel_download' slug %}">Экспорт в excel</a></button>
     {% for answer in answers %}
         <div class="task_content task_plane">
             <p>{{ answer.user.username }}</p>

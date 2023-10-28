@@ -24,7 +24,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         else creates task and questions connected
         """
         result = request.data
-        print(result)
         title = result.pop('0')
 
         if len(Task.objects.filter(creator_id=request.user.id)) >= 3 or len(result.keys()) == 0:

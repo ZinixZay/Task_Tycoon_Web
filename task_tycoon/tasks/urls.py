@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import CreateTask, MyTasks, Index, ShowTask, DeleteTask, SearchTask, \
-    SolveTask, SolutionTaskShow, SolutionShow, UploadFile, download_file
+    SolveTask, SolutionTaskShow, SolutionShow, UploadFile, download_file, download_excel
 from rest_framework import routers
 from .viewsets import TaskViewSet, AnswerViewSet, QuestionViewSet
 
@@ -28,5 +28,6 @@ urlpatterns = [
     path('createtask/', CreateTask.as_view(), name='createtask'),
     path('tasks/', MyTasks.as_view(), name='tasks'),
     path('task/<slug:slug>/', ShowTask.as_view(), name='task'),
+    path('excel/<slug:slug>/', download_excel, name='excel_download'),
     path('', Index.as_view(), name='home')
 ]
