@@ -14,7 +14,6 @@ menu = [
     {'title': 'Решить задание', 'url_name': 'search'}
 ]
 
-identifiers = list()
 
 # Mixins
 
@@ -74,7 +73,6 @@ def generate_identifier() -> int:
         identifier = randint(100000, 999999)
         if identifier not in [i.identifier for i in Task.objects.all()]:
             break
-    identifiers.append(identifier)
     return identifier
 
 
@@ -120,7 +118,7 @@ def analyse_answer(question_query, user_answers) -> dict:
     :param user_answers: User's solution
     :return: python dict with rightness of answers
     """
-    right_answers = {}
+    right_answers = dict()
     for question in question_query:
         if question.test_type:
             right_answers[question.title] = [i['response_name'] for i in list(
@@ -128,7 +126,7 @@ def analyse_answer(question_query, user_answers) -> dict:
         else:
             right_answers[question.title] = question.variants
 
-    result = {}
+    result = dict()
     for question, answer in user_answers.content.items():
         if question in right_answers.keys():
             if type(right_answers[question]) is str:

@@ -9,10 +9,20 @@ from .permissions import IsAuthor
 
 
 class TaskViewSet(viewsets.ModelViewSet):
+    """
+    General Task ViewSet class
+    """
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
     def create(self, request, **kwargs):
+        """
+        Parses info from request, checks permission and create object
+        :param request:
+        :param kwargs:
+        :return: if no permission - response with status forbidden
+        else creates task and questions connected
+        """
         result = request.data
         print(result)
         title = result.pop('0')
@@ -36,26 +46,50 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
+    """
+    General Answer ViewSet class
+    """
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
     permission_classes = (IsAuthor, )
 
     @action(methods=['get'], detail=True)
     def user(self, request, pk=None):
+        """
+        Returns answers created by one user
+        :param request:
+        :param pk: if user pk exists takes it
+        :return: returns answers, given by one user with same pk
+        """
         result = Answer.objects.filter(user_id=pk).values()
         return Response({'answers': result})
 
     @action(methods=['get'], detail=True)
     def task(self, request, pk=None):
+        """
+        Return answer for only 1 task
+        :param request:
+        :param pk: if task pk exists takes it
+        :return: all answers for 1 task
+        """
         result = Answer.objects.filter(task_id=pk).values()
         return Response({'answers': result})
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
+    """
+    General Question ViewSet class
+    """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
     @action(methods=['get'], detail=True)
     def task(self, request, pk=None):
+        """
+        Return all questions for 1 task
+        :param request:
+        :param pk: if pk exists takes it
+        :return: all tasks for 1 task
+        """
         result = Question.objects.filter(task_id=pk).values()
         return Response({'questions': result})

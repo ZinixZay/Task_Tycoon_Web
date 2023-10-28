@@ -1,6 +1,6 @@
 import os
 
-from django.http import FileResponse, HttpResponseRedirect
+from django.http import FileResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, DeleteView, TemplateView
@@ -69,9 +69,9 @@ class SearchTask(DataMixin, LoginRequiredMixin, TemplateView):
         form = SearchTaskForm(self.request.POST)
         if form.is_valid():
             identifier = form.cleaned_data['identifier']
-            task = Task.objects.filter(identifier=identifier)[0]
+            task = Task.objects.filter(identifier=identifier)
             if task:
-                return redirect('solve', slug=task.slug)
+                return redirect('solve', slug=task[0].slug)
             else:
                 return redirect('search')
 
@@ -160,13 +160,29 @@ class DeleteTask(DataMixin, AuthorRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('tasks')
 
+    def form_valid(self, *args, **kwargs):
+        task = self.get_object()
+        if task.upload:
+            os.remove(task.upload.path)
+        task.delete()
+        return redirect('tasks')
 
-def DownloadFile(request, slug):
+
+def download_file(request, slug):
+    """
+    Downloading connected file with task
+    :param request:
+    :param slug: slug of a task
+    :return: file, connected with task
+    """
     task = Task.objects.get(slug=slug)
     return FileResponse(task.upload, as_attachment=True)
 
 
 class UploadFile(DataMixin, View, AuthorRequiredMixin):
+    """
+    Uploading file to a server and connects it with a task
+    """
     def post(self, request, slug):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
