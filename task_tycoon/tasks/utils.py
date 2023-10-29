@@ -150,10 +150,6 @@ def generate_excel(task, answers, questions):
     wb = Workbook()
     ws = wb.active
 
-    print(task)
-    print(answers)
-    print(questions)
-
     ws.title = task.title
     ws["A1"] = "№"
     ws["B1"] = "Ученик"
@@ -166,7 +162,7 @@ def generate_excel(task, answers, questions):
         ws.column_dimensions[get_column_letter(curr_column)].width = len(question.title) + 2
         ws.cell(row=curr_row, column=curr_column, value=question.title)
         curr_column += 1
-    for col in ws.iter_cols(min_row=1, max_row=len(set([i.user_id for i in answers])),
+    for col in ws.iter_cols(min_row=1, max_row=len(set([i.user_id for i in answers])) + 1,
                             max_col=len(questions) + 4, min_col=1):
         for cell in col:
             cell.alignment = Alignment(horizontal='center')
@@ -177,5 +173,54 @@ def generate_excel(task, answers, questions):
     ws.cell(row=curr_row, column=curr_column + 1, value='Кол-во попыток')
     ws.column_dimensions[get_column_letter(curr_column + 1)].width = 17
 
-    wb.save(f"{task.title}.xlsx")
-    return None
+    curr_row += 1
+    curr_column = 1
+
+    answered_persons = sorted(list(set(i.user.username for i in answers)))
+
+    for user_id in range(len(answered_persons)):
+        ws.cell(row=curr_row, column=curr_column, value=user_id + 1)
+        ws.cell(row=curr_row, column=curr_column + 1, value=answered_persons[user_id])
+
+        curr_column = 3
+        for i in range(len(questions)):
+            for answer in list(filter(lambda ans: ans.user.username == answered_persons[user_id], answers)):
+                if type(questions[i].variants) is str:  # Если не тестовый тип
+                    if answer.content[questions[i].title] != ['']:
+                        if answer.content[questions[i].title][0] == questions[i].variants:
+                            ws.cell(row=curr_row, column=curr_column, value='+++')
+                        else:
+                            if next(ws.iter_cols(min_row=curr_row, max_row=curr_row, min_col=curr_column,
+                                                 max_col=curr_column))[0].value != '+++':
+                                ws.cell(row=curr_row, column=curr_column, value='---')
+                else:
+                    if str(questions[i]) in answer.content.keys():
+                        true_answers = [j['response_name'] for j in questions[i].variants if j['response_right']]
+                        if answer.content[str(questions[i])] == true_answers:
+                            ws.cell(row=curr_row, column=curr_column, value='+++')
+                        else:
+                            if next(ws.iter_cols(min_row=curr_row, max_row=curr_row, min_col=curr_column,
+                                                 max_col=curr_column))[0].value != '+++':
+                                ws.cell(row=curr_row, column=curr_column, value='---')
+            curr_column += 1
+
+        t_answers = 0
+        for col in ws.iter_cols(min_col=3, max_col=curr_column - 1, min_row=curr_row, max_row=curr_row):
+            for cell in col:
+                if cell.value == '+++':
+                    cell.fill = PatternFill('solid', fgColor="ACB78E")
+                    t_answers += 1
+                elif cell.value == '---':
+                    cell.fill = PatternFill('solid', fgColor="B17267")
+                else:
+                    cell.fill = PatternFill('solid', fgColor="DCDCDC")
+        ws.cell(row=curr_row, column=curr_column, value=t_answers)
+        ws.cell(row=curr_row, column=curr_column + 1, value=len(list(filter(
+            lambda ans: ans.user.username == answered_persons[user_id], answers))))
+
+        curr_column = 1
+        curr_row += 1
+
+    path_to_save = f"media/uploads/{task.title}.xlsx"
+    wb.save(path_to_save)
+    return path_to_save

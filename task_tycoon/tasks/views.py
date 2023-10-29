@@ -1,10 +1,11 @@
 import os
 
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django_sendfile import sendfile
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm, UploadFileForm
@@ -183,8 +184,8 @@ def download_excel(request, slug):
     task = Task.objects.get(slug=slug)
     answers = Answer.objects.filter(task=task)
     questions = Question.objects.filter(task=task)
-    excel_file = generate_excel(task, answers, questions)
-    return redirect("tasks")
+    excel_file_path = generate_excel(task, answers, questions)
+    return sendfile(request, excel_file_path, attachment=True)
 
 
 class UploadFile(DataMixin, View, AuthorRequiredMixin):
@@ -202,6 +203,7 @@ class UploadFile(DataMixin, View, AuthorRequiredMixin):
                 if task.upload:
                     os.remove(task.upload.path)
             task = Task.objects.get(slug=slug)
+            print(type(file))
             task.upload = file
             task.save()
             return redirect('home')

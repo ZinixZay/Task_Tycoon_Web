@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+
+
+
 from dotenv import load_dotenv, find_dotenv
 
 # .env loading
@@ -146,3 +149,5 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
+SENDFILE_BACKEND = "django_sendfile.backends.simple"
+SENDFILE_ROOT = os.path.join(BASE_DIR)
