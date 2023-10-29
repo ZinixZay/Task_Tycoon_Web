@@ -128,13 +128,13 @@ def analyse_answer(question_query, user_answers) -> dict:
             right_answers[question.title] = [i['response_name'] for i in list(
                 filter(lambda x: x['response_right'], question.variants))]
         else:
-            right_answers[question.title] = question.variants
+            right_answers[question.title] = question.variants.lower()
 
     result = dict()
     for question, answer in user_answers.content.items():
         if question in right_answers.keys():
             if type(right_answers[question]) is str:
-                if answer[0] == right_answers[question]:
+                if answer[0].lower() == right_answers[question]:
                     result[question] = True
                 else:
                     result[question] = False
@@ -187,7 +187,7 @@ def generate_excel(task, answers, questions):
             for answer in list(filter(lambda ans: ans.user.username == answered_persons[user_id], answers)):
                 if type(questions[i].variants) is str:  # Если не тестовый тип
                     if answer.content[questions[i].title] != ['']:
-                        if answer.content[questions[i].title][0] == questions[i].variants:
+                        if answer.content[questions[i].title][0].lower() == questions[i].variants.lower():
                             ws.cell(row=curr_row, column=curr_column, value='+++')
                         else:
                             if next(ws.iter_cols(min_row=curr_row, max_row=curr_row, min_col=curr_column,
