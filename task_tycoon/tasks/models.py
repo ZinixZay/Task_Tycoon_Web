@@ -13,7 +13,6 @@ class Task(models.Model):
     creator = models.ForeignKey(User, verbose_name='Создатель', on_delete=models.CASCADE)
     identifier = models.IntegerField(verbose_name='Идентификатор', default=generate_identifier)
     upload = models.FileField(upload_to="uploads/%Y/%m/%d/", null=True)
-    excel = models.FileField(upload_to="uploads/", null=True)
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
 
     def __str__(self):
@@ -21,7 +20,6 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task', kwargs={'slug': self.slug})
-
 
     class Meta:
         ordering = ('creator', 'title')
@@ -58,3 +56,16 @@ class Answer(models.Model):
         verbose_name_plural = 'Ответы'
 
 
+class Settings(models.Model):
+    task = models.ForeignKey(Task, verbose_name="Задание", on_delete=models.CASCADE)
+    feedback = models.BooleanField(verbose_name="Показывать результат", null=True)
+    attempts = models.IntegerField(verbose_name="Количество попыток", default=0, null=True)
+
+    def __str__(self):
+        return (f"Задание: {self.task.title}, "
+                f"Показывать ответ: {'да' if self.feedback else 'нет'}, Попытки: {self.attempts}")
+
+    class Meta:
+        ordering = ('task', 'feedback', 'attempts')
+        verbose_name = 'Настройки'
+        verbose_name_plural = 'Настройки'
