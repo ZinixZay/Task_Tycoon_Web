@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django_sendfile import sendfile
 
 from .models import Task, Question, Answer
-from .forms import SearchTaskForm, UploadFileForm
+from .forms import SearchTaskForm, UploadFileForm, SetupTaskForm
 from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
     DataMixin, AuthorRequiredMixin, generate_excel
 
@@ -203,7 +203,6 @@ class UploadFile(DataMixin, View, AuthorRequiredMixin):
                 if task.upload:
                     os.remove(task.upload.path)
             task = Task.objects.get(slug=slug)
-            print(type(file))
             task.upload = file
             task.save()
             return redirect('home')
@@ -224,3 +223,25 @@ class Index(DataMixin, View):
             return render(self.request, template_name='tasks/index.html', context=self.set_context(title='Главная'))
         else:
             return redirect('registration')
+
+
+class TaskSetup(DataMixin, View):
+    """
+    Rendering task setup page
+    """
+    def get(self, request, slug):
+        task = Task.objects.get(slug=slug)
+        form = SetupTaskForm
+        return render(request, template_name="tasks/setup.html",
+                      context=self.set_context(title="Настройка",
+                                               task=task,
+                                               form=form))
+
+    def post(self, request, slug):
+        form = SetupTaskForm(request.POST)
+        if form.is_valid():
+            task = Task.objects.get(slug=slug)
+            task.feedback = form.cleaned_data['feedback']
+            task.attempts = form.cleaned_data['attempts']
+            task.save()
+            return redirect('tasks')

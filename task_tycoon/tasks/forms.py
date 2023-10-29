@@ -8,3 +8,8 @@ class SearchTaskForm(forms.Form):
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+
+
+class SetupTaskForm(forms.Form):
+    feedback = forms.BooleanField(label="Показывать ответы", required=False)
+    attempts = forms.IntegerField(label="Количество попыток", required=True)

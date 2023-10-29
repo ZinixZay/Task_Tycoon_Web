@@ -11,6 +11,7 @@
             <div class="task_view_btns">
                 <button class="task_ready"><a class="create_but" href="{% url 'task' task.slug %}">Просмотр</a></button>
                 <button class="task_ready"><a class="create_but" href="{% url 'upload' task.slug %}">Файл</a></button>
+                <button class="task_ready"><a class="create_but" href="{% url 'setup' task.slug %}">Настроить</a></button>
                 <button class="task_ready"><a class="create_but" href="{% url 'solution_task' task.slug %}">Ответы</a></button>
                 <button class="task_ready"><a class="create_but" href="{% url 'delete' task.slug %}">Удалить</a></button>
             </div>

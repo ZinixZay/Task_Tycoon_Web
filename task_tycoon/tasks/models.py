@@ -14,6 +14,8 @@ class Task(models.Model):
     identifier = models.IntegerField(verbose_name='Идентификатор', default=generate_identifier)
     upload = models.FileField(upload_to="uploads/%Y/%m/%d/", null=True)
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
+    feedback = models.BooleanField(verbose_name="Показывать результат", null=True)
+    attempts = models.IntegerField(verbose_name="Количество попыток", default=0, null=True)
 
     def __str__(self):
         return self.title
@@ -54,18 +56,3 @@ class Answer(models.Model):
         ordering = ('user', 'task')
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
-
-
-class Settings(models.Model):
-    task = models.ForeignKey(Task, verbose_name="Задание", on_delete=models.CASCADE)
-    feedback = models.BooleanField(verbose_name="Показывать результат", null=True)
-    attempts = models.IntegerField(verbose_name="Количество попыток", default=0, null=True)
-
-    def __str__(self):
-        return (f"Задание: {self.task.title}, "
-                f"Показывать ответ: {'да' if self.feedback else 'нет'}, Попытки: {self.attempts}")
-
-    class Meta:
-        ordering = ('task', 'feedback', 'attempts')
-        verbose_name = 'Настройки'
-        verbose_name_plural = 'Настройки'
