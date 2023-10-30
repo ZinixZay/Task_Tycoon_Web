@@ -6,6 +6,16 @@
     {% if task.upload %}
         <button class="task_ready"><a class="create_but" href="{% url 'download' task.slug %}">Скачать файл</a></button>
     {% endif %}
+    {% if task.feedback %}
+        <p>Результаты показываются</p>
+    {% else %}
+        <p>Результаты скрыты</p>
+    {% endif %}
+    {% if task.attempts == 0 %}
+        <p>Количество попыток не ограничено</p>
+    {% else %}
+        <p>Количество попыток - {{task.attempts}}</p>
+    {% endif %}
         {% for question in questions %}
         <div class="task_content task_plane">
             <p class="question"> {{ question.title }} </p>

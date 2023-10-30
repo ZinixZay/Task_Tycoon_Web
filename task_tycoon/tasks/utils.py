@@ -101,7 +101,7 @@ def parse_answer_to_dict(response) -> dict:
     return {'task_title': task_title[0], **content}
 
 
-def check_solution_exists(Answer, task, user) -> bool:
+def check_solution_allowed(Answer, task, user) -> bool:
     """
     Check if user already answered this task. if yes -> does not accept this solution
     :param Answer: Answer model
@@ -109,10 +109,9 @@ def check_solution_exists(Answer, task, user) -> bool:
     :param user: solution user
     :return: True, if solution exists
     """
-    solution = Answer.objects.filter(task=task, user=user)
-    if solution:
-        return True
-    return False
+    if len(Answer.objects.filter(task=task, user=user)) == task.attempts:
+        return False
+    return True
 
 
 def analyse_answer(question_query, user_answers) -> dict:

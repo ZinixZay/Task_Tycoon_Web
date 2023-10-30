@@ -9,7 +9,7 @@ from django_sendfile import sendfile
 
 from .models import Task, Question, Answer
 from .forms import SearchTaskForm, UploadFileForm, SetupTaskForm
-from .utils import parse_answer_to_dict, check_solution_exists, analyse_answer, \
+from .utils import parse_answer_to_dict, check_solution_allowed, analyse_answer, \
     DataMixin, AuthorRequiredMixin, generate_excel
 
 
@@ -93,9 +93,12 @@ class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
     def post(self, *args):
         answer = parse_answer_to_dict(self.request.POST)
         task = Task.objects.get(title=answer.pop('task_title'))
-        # if check_solution_exists(Answer, task, self.request.user):
-        #     return redirect('home')
-        Answer.objects.create(user=self.request.user, task=task, content=answer)
+        if check_solution_allowed(Answer, task, self.request.user):
+            result = Answer.objects.create(user=self.request.user, task=task, content=answer)
+            if task.feedback:
+                return redirect('solution', result.pk)
+            else:
+                return redirect('search')
         return redirect('home')
 
 
