@@ -15,7 +15,7 @@ class Task(models.Model):
     upload = models.FileField(upload_to="uploads/%Y/%m/%d/", null=True)
     slug = models.SlugField(verbose_name='URL', max_length=255, unique=True, db_index=True)
     feedback = models.BooleanField(verbose_name="Показывать результат", null=True)
-    attempts = models.IntegerField(verbose_name="Количество попыток", default=0, null=True)
+    attempts = models.IntegerField(verbose_name="Количество попыток", default=1, null=True)
 
     def __str__(self):
         return self.title
