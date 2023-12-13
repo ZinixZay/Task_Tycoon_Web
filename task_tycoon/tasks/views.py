@@ -87,7 +87,8 @@ class SolveTask(DataMixin, LoginRequiredMixin, TemplateView):
         task = Task.objects.filter(slug=kwargs['slug'])[0]
         questions = Question.objects.filter(task_id=task.id)
         context = super().get_context_data(**kwargs)
-        c_def = self.set_context(title=f'Решение {task.title}', questions=questions, task=task)
+        c_def = self.set_context(title=f'Решение {task.title}',
+                                 questions=sorted(questions, key=lambda q: len(q.title)), task=task)
         return {**context, **c_def}
 
     def post(self, *args):

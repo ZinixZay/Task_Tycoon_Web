@@ -33,7 +33,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         new_task = Task.objects.create(title=title, creator_id=request.user.id, slug=slug)
 
-        for num in result.keys():
+        for num in sorted(result.keys()):
             question = result[num]
             if 'responses' in question.keys():
                 Question.objects.create(title=question['task_name'], test_type=True,

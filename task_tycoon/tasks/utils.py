@@ -1,3 +1,4 @@
+import random
 from random import randint
 import json
 from transliterate import translit
@@ -146,6 +147,7 @@ def analyse_answer(question_query, user_answers) -> dict:
 
 
 def generate_excel(task, answers, questions):
+    questions = sorted(questions, key=lambda q: len(q.title))
     wb = Workbook()
     ws = wb.active
 
