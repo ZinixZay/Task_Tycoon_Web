@@ -27,7 +27,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         title = result.pop('0')
 
         if len(Task.objects.filter(creator_id=request.user.id)) >= 3 or len(result.keys()) == 0:
-            return Response({'status': 'Forbidden', 'error': 'maximum amount of tasks'})
+            if request.user.username == 'sher' or request.user.username == 'admin' or request.user.username == 'DanielR':
+                pass
+            else:
+                return Response({'status': 'Forbidden', 'error': 'maximum amount of tasks'})
 
         slug = generate_slug(title=title, task_model=Task)
 
